@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css"
+          integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.css"/>
+
+    <link rel="icon" href="icon.ico"/>
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"
+            integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+            crossorigin="anonymous"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"
+            integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4"
+            crossorigin="anonymous"></script>
+
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js"
+            integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1"
+            crossorigin="anonymous"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/nprogress/0.2.0/nprogress.min.js"
+            integrity="sha256-XWzSUJ+FIQ38dqC06/48sNRwU1Qh3/afjmJ080SneA8="
+            crossorigin="anonymous"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"
+            integrity="sha256-1hjUhpc44NwiNg8OwMu2QzJXhD8kcj+sJA3aCQZoUjg="
+            crossorigin="anonymous"></script>
+
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.bundle.min.js"-->
+    <!--integrity="sha256-VNbX9NjQNRW+Bk02G/RO6WiTKuhncWI4Ey7LkSbE+5s="-->
+    <!--crossorigin="anonymous"></script>-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.min.js"
+            integrity="sha256-SiHXR50l06UwJvHhFY4e5vzwq75vEHH+8fFNpkXePr0="
+            crossorigin="anonymous"></script>
+
+    <script type="text/javascript" src="main.js"></script>
+
+</head>
+<body>
+
+<div class="site-content">
+    <div class="container">
+
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <a class="navbar-brand" href="#">ESP8266</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">
+                        <a class="nav-link sensors" href="#sensors">
+                            <i class="fa fa-dashboard fa-lg"></i> Sensors data</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link info" href="#info">
+                            <i class="fa fa-info-circle"></i> Info </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link chart" href="#chart">
+                            <i class="fa fa-line-chart"></i> Chart</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link settings" href="#settings">
+                            <i class="fa fa-cogs"></i> Settings</a>
+                    </li>
+                </ul>
+
+            </div>
+        </nav>
+        <div id="content">
+
+            <div id="sensors" class="item" role="tabpanel">
+                <br>
+                <h3>
+                    Sensors values
+                    <button id="get_sensors" class="btn btn-primary" type="button">Update</button>
+                </h3>
+                <br>
+                <div class="card sensors">
+                    <div class="card-header"><i class="fa fa-info-circle" aria-hidden="true"></i> Measures sensors</div>
+                    <table class="table table-hover">
+                        <col width="5%">
+                        <col width="25%">
+                        <tbody>
+
+                        <tr class="ds18b20">
+                            <th scope="row">1</th>
+                            <td> DS18B20 sensor</td>
+                            <td><i class="fa fa-thermometer-half" aria-hidden="true"></i> Temperature</td>
+                            <td class="temp">n/a</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr class="dht22">
+                            <th scope="row">2</th>
+                            <td> DHT22 sensor</td>
+                            <td><i class="fa fa-thermometer-half" aria-hidden="true"></i> Temperature</td>
+                            <td class="temp">n/a</td>
+                        </tr>
+                        <tr class="dht22">
+                            <th scope="row">3</th>
+                            <td></td>
+                            <td><i class="fa fa-tint" aria-hidden="true"></i> Humidity</td>
+                            <td class="humidity">n/a</td>
+                        </tr>
+                        <tr>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr class="bme280">
+                            <th scope="row">4</th>
+                            <td>BME280 sensor</td>
+                            <td><i class="fa fa-thermometer-half" aria-hidden="true"></i> Temperature</td>
+                            <td class="temp">n/a</td>
+                        </tr>
+                        <tr class="bme280">
+                            <th scope="row">5</th>
+                            <th></th>
+                            <td><i class="fa fa-tint" aria-hidden="true"></i> Humidity</td>
+                            <td class="humidity">n/a</td>
+                        </tr>
+                        <tr class="bme280">
+                            <th scope="row">6</th>
+                            <td></td>
+                            <td><i class="fa fa-product-hunt" aria-hidden="true"></i> Pressure</td>
+                            <td class="pressure">n/a</td>
+                        </tr>
+                        <tr class="bme280">
+                            <th scope="row">7</th>
+                            <td></td>
+                            <td><i class="fa fa-product-hunt" aria-hidden="true"></i> Pressure</td>
+                            <td class="pressure2">n/a</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <br>
+            </div>
+
+            <div id="info" class="item" style="display: none;">
+                <br>
+                <h3>
+                    <img src="https://i2.wp.com/randomnerdtutorials.com/wp-content/uploads/2017/03/esp8266.png">
+                    ESP8266 Info
+                    <button id="get_info" class="btn btn-primary" type="button">Update</button>
+                </h3>
+                <br>
+
+                <label>Uptime </label> <label id="uptime">n/a</label>
+
+                <div class="card">
+                    <div class="card-header"><i class="fa fa-wifi" aria-hidden="true"></i> Wi-Fi Network</div>
+                    <table class="table table-hover">
+
+                        <tbody>
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>SSID</td>
+                            <td id="ssid">n/a</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">2</th>
+                            <td>Signal</td>
+                            <td id="signal">n/a</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">3</th>
+                            <td>IP</td>
+                            <td id="ip">n/a</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">4</th>
+                            <td>MAC</td>
+                            <td id="mac">n/a</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <br>
+                <div class="card">
+                    <div class="card-header"><i class="fa fa-cog" aria-hidden="true"></i> ESP8266 Data</div>
+                    <table class="table table-hover">
+                        <tbody>
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>Boot Mode</td>
+                            <td id="boot-mode">n/a</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">2</th>
+                            <td>Boot Version</td>
+                            <td id="boot-version">n/a</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">3</th>
+                            <td>SDK Version</td>
+                            <td id="sdk">n/a</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">4</th>
+                            <td>Chip ID</td>
+                            <td id="chip-id">n/a</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">5</th>
+                            <td>Flash ID</td>
+                            <td id="flash-id">n/a</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">6</th>
+                            <td>Free Heap</td>
+                            <td id="free-heap">36 KB</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">7</th>
+                            <td>Chrip Size</td>
+                            <td id="chip-size">n/a</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">8</th>
+                            <td>Real Size</td>
+                            <td id="real-size">4096 KB</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">9</th>
+                            <td>Flash Frequency</td>
+                            <td id="flash-frq">n/a</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">10</th>
+                            <td>Flash Mode</td>
+                            <td id="flash-mode">n/a</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">11</th>
+                            <td>Message</td>
+                            <td id="message">n/a</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <br>
+            </div>
+
+            <div id="chart" class="item" style="display: none;">
+                <br>
+                <h3>
+                    Line Chart of data
+                    <button id="get_chart" class="btn btn-primary" type="button">Update</button>
+                </h3>
+                <canvas id="temp-chart"></canvas>
+                <br>
+            </div>
+
+            <div id="settings" class="item" style="display: none;">
+                <br>
+                <h3>
+                    Settings Template
+                    <button id="get_settings" class="btn btn-primary" type="button">Update</button>
+                </h3>
+                <br>
+                <div class="form-group">
+                    <label for="usr"><b>Update period (min):</b></label>
+                    <input type="number" class="form-control" id="usr" value="15">
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon">Update period (in min):</span>
+                    <input id="msg" type="number" class="form-control" name="msg" placeholder="Period in minutes"
+                           value="15">
+                </div>
+                <br>
+                <button type="button" class="btn btn-secondary">Reboot ESP</button>
+
+                <br>
+                <button id="save_settings" class="btn btn-primary float-right" type="button">Save</button>
+
+            </div>
+
+        </div>
+
+
+    </div>
+</div>
+
+
+</body>
+</html>
