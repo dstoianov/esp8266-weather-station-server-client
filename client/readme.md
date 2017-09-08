@@ -22,12 +22,19 @@ https://github.com/esp8266/arduino-esp8266fs-plugin
 
 ---
  ### Sensors data
+ 
  ![](https://github.com/dstoianov/esp8266-weather-station-server-client/raw/master/files/sensors.png)
+ 
  ### Chart 
- ![](https://raw.githubusercontent.com/dstoianov/esp8266-weather-station-server-client/master/files/chart.png)
+ 
+ ![](https://github.com/dstoianov/esp8266-weather-station-server-client/raw/master/files/chart.png)
+ 
  ### Info
- ![](https://raw.githubusercontent.com/dstoianov/esp8266-weather-station-server-client/master/files/info.png)
+ 
+ ![](https://github.com/dstoianov/esp8266-weather-station-server-client/raw/master/files/info.png)
+ 
  ### Settings, not finished yet
- ![](https://raw.githubusercontent.com/dstoianov/esp8266-weather-station-server-client/master/files/settings.png)
+ 
+ ![](https://github.com/dstoianov/esp8266-weather-station-server-client/raw/master/files/settings.png)
  
  
