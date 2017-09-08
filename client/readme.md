@@ -19,3 +19,13 @@ https://github.com/esp8266/arduino-esp8266fs-plugin
       gzip -d index.html.gz
       ```
  
+ Sensors data
+ ![](https://github.com/dstoianov/esp8266-weather-station-server-client/raw/master/files/sensors.png)
+ Chart 
+ ![](https://raw.githubusercontent.com/dstoianov/esp8266-weather-station-server-client/master/files/chart.png)
+ Info
+ ![](https://raw.githubusercontent.com/dstoianov/esp8266-weather-station-server-client/master/files/info.png)
+ Settings, not fished yet
+ ![](https://raw.githubusercontent.com/dstoianov/esp8266-weather-station-server-client/master/files/settings.png)
+ 
+ 
