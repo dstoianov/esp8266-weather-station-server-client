@@ -113,11 +113,14 @@ $(document).ready(function () {
 
 //            console.log("Is valid json " + isValidJson(data));
 //            console.log("Data: " + JSON.stringify(data.sensors) + "\nStatus: " + status);
+            $('.ds18b20 .s_name').text(data.sensors.ds18b20.name.toUpperCase());
             $('.ds18b20 .temp').text(precise_round(data.sensors.ds18b20.temp, 1) + " C");
 
+            $('.dht22 .s_name').text(data.sensors.dht22.name.toUpperCase());
             $('.dht22 .temp').text(precise_round(data.sensors.dht22.temp, 1) + " C");
             $('.dht22 .humidity').text(Math.round(data.sensors.dht22.humidity) + " %");
 
+            $('.bme280 .s_name').text(data.sensors.bme280.name.toUpperCase());
             $('.bme280 .temp').text(precise_round(data.sensors.bme280.temp, 1) + " C");
             $('.bme280 .humidity').text(Math.round(data.sensors.bme280.humidity) + " %");
             $('.bme280 .pressure').text(Math.round(data.sensors.bme280.pressure) + " hPa");
@@ -131,6 +134,8 @@ $(document).ready(function () {
         $.get(host + "info", function (data, status) {
             // console.log("Data: " + JSON.stringify(data) + "\nStatus: " + status);
             $('#uptime').text(getDuration(data.uptime));
+            $('#version').text(data.build_vesrion);
+
             $('#ssid').text(data.network.ssid);
             $('#signal').text(data.network.signal);
             $('#ip').text(data.network.ip);
@@ -139,11 +144,14 @@ $(document).ready(function () {
             $('#boot-mode').text(data.esp.boot_mode);
             $('#boot-version').text(data.esp.boot_version);
             $('#sdk').text(data.esp.sdk_version);
+            $('#core').text(data.esp.core_version);
             $('#chip-id').text(data.esp.chip_id);
             $('#flash-id').text(data.esp.flash_id);
             $('#free-heap').text(precise_round((data.esp.free_heap / 1024), 1) + " KB");
             $('#chip-size').text((data.esp.chip_size / 1024) + " KB");
             $('#real-size').text((data.esp.real_size / 1024) + " KB");
+            $('#sketch-size').text(precise_round((data.esp.sketch_size / 1024), 1) + " KB");
+            $('#free-sketch-space').text((data.esp.free_sketch_space / 1024) + " KB");
             $('#flash-frq').text((data.esp.flash_frequency / 1000 / 1000) + " MHz");
             $('#flash-mode').text(data.esp.flash_mode);
             $('#message').text(data.esp.message);

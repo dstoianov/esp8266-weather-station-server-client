@@ -60,15 +60,15 @@
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item">
                         <a class="nav-link sensors" href="#sensors">
-                            <i class="fa fa-dashboard fa-lg"></i> Sensors data</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link info" href="#info">
-                            <i class="fa fa-info-circle"></i> Info </a>
+                            <i class="fa fa-dashboard fa-lg"></i> Measurements</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link chart" href="#chart">
                             <i class="fa fa-line-chart"></i> Chart</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link info" href="#info">
+                            <i class="fa fa-info-circle"></i> Info</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link settings" href="#settings">
@@ -82,13 +82,13 @@
 
             <div id="sensors" class="item" role="tabpanel">
                 <br>
-                <h3>
-                    Sensors values
-                    <button id="get_sensors" class="btn btn-primary" type="button">Update</button>
-                </h3>
                 <br>
                 <div class="card sensors">
-                    <div class="card-header"><i class="fa fa-info-circle" aria-hidden="true"></i> Measures sensors</div>
+                    <div class="card-header">
+                        <i class="fa fa-info-circle" aria-hidden="true"></i> <label class="h4">Current
+                        Measurements</label>
+                        <button id="get_sensors" class="btn pull-right btn-primary" type="button">Update</button>
+                    </div>
                     <table class="table table-hover">
                         <col width="5%">
                         <col width="25%">
@@ -96,7 +96,7 @@
 
                         <tr class="ds18b20">
                             <th scope="row">1</th>
-                            <td> DS18B20 sensor</td>
+                            <td><strong><label class="s_name">n/a</label> Sensor</strong></td>
                             <td><i class="fa fa-thermometer-half" aria-hidden="true"></i> Temperature</td>
                             <td class="temp">n/a</td>
                         </tr>
@@ -108,7 +108,7 @@
                         </tr>
                         <tr class="dht22">
                             <th scope="row">2</th>
-                            <td> DHT22 sensor</td>
+                            <td><strong><label class="s_name">n/a</label> Sensor</strong></td>
                             <td><i class="fa fa-thermometer-half" aria-hidden="true"></i> Temperature</td>
                             <td class="temp">n/a</td>
                         </tr>
@@ -126,7 +126,7 @@
                         </tr>
                         <tr class="bme280">
                             <th scope="row">4</th>
-                            <td>BME280 sensor</td>
+                            <td><strong><label class="s_name">n/a</label> Sensor</strong></td>
                             <td><i class="fa fa-thermometer-half" aria-hidden="true"></i> Temperature</td>
                             <td class="temp">n/a</td>
                         </tr>
@@ -154,16 +154,31 @@
                 <br>
             </div>
 
+            <div id="chart" class="item" style="display: none;">
+                <br>
+                <h3>
+                    Last 24h of Measurements
+                    <button id="get_chart" class="btn pull-right btn-primary" type="button">Update</button>
+                </h3>
+                <canvas id="temp-chart"></canvas>
+                <br>
+            </div>
+
             <div id="info" class="item" style="display: none;">
                 <br>
                 <h3>
-                    <img src="https://i2.wp.com/randomnerdtutorials.com/wp-content/uploads/2017/03/esp8266.png">
+                    <img src="esp8266.png">
                     ESP8266 Info
-                    <button id="get_info" class="btn btn-primary" type="button">Update</button>
+                    <button id="get_info" class="btn pull-right btn-primary" type="button">Update</button>
                 </h3>
-                <br>
 
-                <label>Uptime </label> <label id="uptime">n/a</label>
+                <dl class="row">
+                    <dt class="col-sm-3">Uptime:</dt>
+                    <dd class="col-sm-9" id="uptime">n/a</dd>
+
+                    <dt class="col-sm-3">Build Version:</dt>
+                    <dd class="col-sm-9" id="version">n/a</dd>
+                </dl>
 
                 <div class="card">
                     <div class="card-header"><i class="fa fa-wifi" aria-hidden="true"></i> Wi-Fi Network</div>
@@ -214,6 +229,11 @@
                             <td id="sdk">n/a</td>
                         </tr>
                         <tr>
+                            <th scope="row">3</th>
+                            <td>CORE Version</td>
+                            <td id="core">n/a</td>
+                        </tr>
+                        <tr>
                             <th scope="row">4</th>
                             <td>Chip ID</td>
                             <td id="chip-id">n/a</td>
@@ -236,20 +256,30 @@
                         <tr>
                             <th scope="row">8</th>
                             <td>Real Size</td>
-                            <td id="real-size">4096 KB</td>
+                            <td id="real-size">n/a</td>
                         </tr>
                         <tr>
                             <th scope="row">9</th>
+                            <td>Sketch Size</td>
+                            <td id="sketch-size">n/a</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">10</th>
+                            <td>Free Sketch Space</td>
+                            <td id="free-sketch-space">n/a</td>
+                        </tr>
+                        <tr>
+                            <th scope="row">11</th>
                             <td>Flash Frequency</td>
                             <td id="flash-frq">n/a</td>
                         </tr>
                         <tr>
-                            <th scope="row">10</th>
+                            <th scope="row">12</th>
                             <td>Flash Mode</td>
                             <td id="flash-mode">n/a</td>
                         </tr>
                         <tr>
-                            <th scope="row">11</th>
+                            <th scope="row">13</th>
                             <td>Message</td>
                             <td id="message">n/a</td>
                         </tr>
@@ -259,21 +289,11 @@
                 <br>
             </div>
 
-            <div id="chart" class="item" style="display: none;">
-                <br>
-                <h3>
-                    Line Chart of data
-                    <button id="get_chart" class="btn btn-primary" type="button">Update</button>
-                </h3>
-                <canvas id="temp-chart"></canvas>
-                <br>
-            </div>
-
             <div id="settings" class="item" style="display: none;">
                 <br>
                 <h3>
                     Settings Template
-                    <button id="get_settings" class="btn btn-primary" type="button">Update</button>
+                    <button id="get_settings" class="btn pull-right btn-primary" type="button">Update</button>
                 </h3>
                 <br>
                 <div class="form-group">
