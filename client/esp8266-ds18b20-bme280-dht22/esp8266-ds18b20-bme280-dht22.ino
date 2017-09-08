@@ -3,6 +3,8 @@
 
 // Include the libraries we need
 #include <OneWire.h>
+#include <Arduino.h>
+//#include "adc.h"
 #include <DallasTemperature.h>
 #include <Wire.h>
 #include <SPI.h>
@@ -34,7 +36,7 @@
 #define CONTENT_TYPE_JSON "application/json"
 
 
-const char *build_version_str = "Version 1.0, " __DATE__ ", " __TIME__;
+const char *build_version_str = "1.0, " __DATE__ ", " __TIME__;
 
 
 // Setup a oneWire instance to communicate with any OneWire devices (not just Maxim/Dallas temperature ICs)
@@ -90,7 +92,7 @@ const int led = 13;
 
 unsigned long last_time = 0;
 
-const int interval_min = 15; // collect data every 15 minutes
+const int update_interval_min = 15; // collect data every 15 minutes
 
 void setup(void) {
 
@@ -169,7 +171,7 @@ void loop() {
     do_measure();
   }
 
-  if (millis() - last_time > interval_min * 60 * 1000) {
+  if (millis() - last_time > update_interval_min * 60 * 1000) {
     do_measure();
     last_time = millis();
   }
@@ -294,16 +296,22 @@ struct sensorMeasure readDHT22Values() {
 
 void routes() {
   server.on("/", handleRoot);
-  server.on("/info", handleInfo);
   server.on("/sensors", handleSensors);
   server.on("/day", handleDay);
-  //  server.on("/settings", handleSettings); //to be developed
+  server.on("/info", handleInfo);
+  server.on("/settings", handleSettings); //in develop
   //    server.onNotFound(handleNotFound);
 
   server.onNotFound([]() {
     if (!handleFileRead(server.uri()))
       handleNotFound();
   });
+}
+
+
+void setHeader() {
+  server.sendHeader("Access-Control-Allow-Origin", "*");
+  server.sendHeader("user-agent", "esp8266");
 }
 
 void handleSensors() {
@@ -314,7 +322,6 @@ void handleSensors() {
   DynamicJsonBuffer jsonBuffer;
   JsonObject &root = jsonBuffer.createObject();
   root["success"] = "OK";
-  root["uptime"] = millis();
   JsonObject &sensors = root.createNestedObject("sensors");
   JsonObject &sensor1 = sensors.createNestedObject("ds18b20");
   sensor1["name"] = ds.name;
@@ -335,14 +342,12 @@ void handleSensors() {
     sendError();
   }
 
-
   char buffer[512];
   root.printTo(buffer, sizeof(buffer));
   //    root.prettyPrintTo(Serial);
   setHeader();
   server.send(200, CONTENT_TYPE_JSON, buffer);
 }
-
 
 void handleDay() {
   DynamicJsonBuffer jsonBuffer;
@@ -377,13 +382,6 @@ void handleDay() {
   server.send(200, CONTENT_TYPE_JSON, buffer);
 }
 
-
-void setHeader() {
-  server.sendHeader("Access-Control-Allow-Origin", "*");
-  server.sendHeader("user-agent", "esp8266");
-}
-
-
 void handleInfo() {
   StaticJsonBuffer<1024> jsonBuffer;
   JsonObject &root = jsonBuffer.createObject();
@@ -406,6 +404,9 @@ void handleInfo() {
   esp["boot_mode"] = ESP.getBootMode();
   esp["boot_version"] = ESP.getBootVersion();
   esp["sdk_version"] = String(ESP.getSdkVersion());
+  esp["core_version"] = ESP.getCoreVersion();
+  esp["sketch_size"] = ESP.getSketchSize();
+  esp["free_sketch_space"] = ESP.getFreeSketchSpace();
   esp["chip_id"] = ESP.getChipId();
   esp["flash_id"] = ESP.getFlashChipId();
   esp["free_heap"] = ESP.getFreeHeap();
@@ -429,32 +430,26 @@ void handleInfo() {
   server.send(200, CONTENT_TYPE_JSON, buffer);
 }
 
+void handleSettings() {
+  DynamicJsonBuffer jsonBuffer;
+  JsonObject &root = jsonBuffer.createObject();
+
+  root["success"] = "OK";
+  root["vcc"] = (float)ESP.getVcc() / 1024.0f;
+  root["more_settings"] = "in progress";
+
+  char buffer[1024];
+  root.printTo(buffer, sizeof(buffer));
+  //  root.prettyPrintTo(Serial);
+  setHeader();
+  server.send(200, CONTENT_TYPE_JSON, buffer);
+}
+
 void handleRoot() {
   if (!handleFileRead("/"))
     handleNotFound();
   digitalWrite(led, 0);
 }
-
-//void handleRoot() {
-//    digitalWrite(led, 1);
-//    dht22 dh = readDHT22Values();
-//    ds18b20 sens = readDS18b20Values();
-//    bme280 bm = readBMEValues();
-//
-//    String html;
-//    html = "<h1>hello from esp8266!</h2>"
-//                   "<br> <h2>Uptime " + String(millis()) + "</h2>" +
-//           "<br> DS18B20 temp " + String(sens.temp) + " C" +
-//           "<br><br> DHT22 temp " + String(dh.temp) + " C" +
-//           "<br> DHT22 humidity " + String(dh.humidity) + " %" +
-//           "<br><br> BME280 temp " + String(bm.temp) + " C" +
-//           "<br> BME280 humidity " + String(bm.humidity) + " %" +
-//           "<br> BME280 pressure " + String(bm.pressure) + " hPa" +
-//           "<br> BME280 pressure " + String(bm.pressure_2) + " mm";
-//
-//    server.send(200, CONTENT_TYPE_TEXT_HTML, html);
-//    digitalWrite(led, 0);
-//}
 
 void handleNotFound() {
   digitalWrite(led, 1);
