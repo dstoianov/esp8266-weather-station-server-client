@@ -5,8 +5,8 @@ $(document).ready(function () {
     window.host = loc.host !== '' ? (window.host + loc.host) : '';
 
     if (window.host === '')
-//     host   window.host = "http://192.168.178.21/";
-     window.host = "http://192.168.150.174/";
+       window.host = "http://192.168.178.21/";
+//     window.host = "http://192.168.150.174/";
     else
         window.host += '/';
 
@@ -134,7 +134,8 @@ $(document).ready(function () {
         $.get(host + "info", function (data, status) {
             // console.log("Data: " + JSON.stringify(data) + "\nStatus: " + status);
             $('#uptime').text(getDuration(data.uptime));
-            $('#version').text(data.build_vesrion);
+            $('#version').text(data.build_version);
+            $('#reset_reason').text(data.esp.reset_reason);
 
             $('#ssid').text(data.network.ssid);
             $('#signal').text(data.network.signal);
@@ -176,9 +177,9 @@ $(document).ready(function () {
             var updateInterval = 15;
             var newTime;
             if (data.total_records==1){
-                newTime = moment(data.last_measure_time, "HH:mm").toDate();
+                newTime = moment(data.last_measured_time, "HH:mm:ss").toDate();
             } else{
-                newTime = moment(data.last_measure_time, "HH:mm").add(-(data.total_records-1)*updateInterval, 'minutes').toDate();
+                newTime = moment(data.last_measured_time, "HH:mm:ss").add(-(data.total_records-1)*updateInterval, 'minutes').toDate();
             }
             console.log(newTime);
             for (var index = 0; index < data.records.length; ++index) {
@@ -195,7 +196,7 @@ $(document).ready(function () {
                 // pres
                 config.data.datasets[2].data.push({
                     x: newTime,
-                    y: (data.records[index].p/10)
+                    y: (data.records[index].p)
                 });
                 newTime = addMinutes(newTime, updateInterval);
             }
