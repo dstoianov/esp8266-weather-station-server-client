@@ -292,6 +292,10 @@
                 <br>
             </div>
 
+
+            <!--SETTINGS-->
+
+
             <div id="settings" class="item" style="display: none;">
                 <br>
                 <h3>
@@ -299,21 +303,79 @@
                     <button id="get_settings" class="btn pull-right btn-primary" type="button">Update</button>
                 </h3>
                 <br>
-                <div class="form-group">
-                    <label for="usr"><b>Update period (min):</b></label>
-                    <input type="number" class="form-control" id="usr" value="15">
-                </div>
-                <div class="input-group">
-                    <span class="input-group-addon">Update period (in min):</span>
-                    <input id="msg" type="number" class="form-control" name="msg" placeholder="Period in minutes"
-                           value="15">
-                </div>
                 <br>
-                <button type="button" class="btn btn-secondary">Reboot ESP</button>
+
+                <div class="col-sm-6">
+                    <div class="card">
+
+                        <div class="card-header">
+                            <label class="h4">ESP Configuration</label>
+                        </div>
+                        <div class="card-block">
+                            <div class="container">
+                                <br>
+                                <form class="form-inline">
+                                    <div class="form-group">
+                                        <label for="inputPassword2" class="col-3 col-form-label">Update Period</label>
+
+                                    </div>
+                                    <div class="form-group">
+                                        <!--<label for="inputPassword2" class="sr-only">hohoh</label>-->
+                                        <input type="number" class="form-control" id="inputPassword2" value="15"
+                                               placeholder="min">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Save</button>
+
+                                </form>
+                                <br>
+                            </div>
+                        </div>
+
+
+                    </div>
+                </div>
 
                 <br>
-                <button id="save_settings" class="btn btn-primary float-right" type="button">Save</button>
+                <br>
 
+
+                <div class="col-sm-6">
+                    <div class="card">
+
+                        <div class="card-header">
+                            <label class="h4">NTP Configuration</label>
+                        </div>
+
+                        <div class="card-block">
+                            <br>
+                            <div class="container">
+                                <form>
+                                    <div class="form-group row">
+                                        <label for="inputEmail3" class="col-3 col-form-label">Server NTP</label>
+                                        <div class="col-5">
+                                            <input type="text" class="form-control" id="inputEmail3"
+                                                   value="europe.pool.ntp.org" placeholder="europe.pool.ntp.org">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label for="inputPassword3" class="col-3 col-form-label">Time Zone</label>
+                                        <div class="col-5">
+                                            <input type="text" class="form-control" id="inputPassword3" value="+3"
+                                                   placeholder="+3">
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="offset-sm-2 col-sm-10">
+                                            <button type="submit" class="btn btn-primary ">Submit</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+
+                </div>
             </div>
 
         </div>

@@ -36,7 +36,7 @@
 #define CONTENT_TYPE_JSON "application/json"
 
 
-const char *build_version_str = "1.0, " __DATE__ ", " __TIME__;
+const char *build_version = "1.0, " __DATE__ ", " __TIME__;
 
 
 // Setup a oneWire instance to communicate with any OneWire devices (not just Maxim/Dallas temperature ICs)
@@ -55,11 +55,11 @@ DHT dht(DHT_PIN, DHT_TYPE);
 // Set up ESP8266 ADC for voltage read
 ADC_MODE(ADC_VCC);
 
-
+const int time_zone = 2;
 WiFiUDP ntpUDP;
-//NTPClient timeClient(ntpUDP);
-NTPClient timeClient(ntpUDP, "de.pool.ntp.org", 3600, 60 * 60000);
-String last_measure_time;
+NTPClient timeClient(ntpUDP, "europe.pool.ntp.org", time_zone * 60 * 60);
+
+String last_measured_time;
 
 //const char *ssid = "FRITZ";
 //const char *password = "32570220417897809444";
@@ -68,7 +68,7 @@ const char* ssid = "kiwi Guest";
 const char* password = "Opening Doors";
 
 struct sensorMeasure {
-  char *name;
+  String name;
   float temp;
   float humidity;
   float pressure;
@@ -179,13 +179,21 @@ void loop() {
 
 
 void do_measure() {
-  sensorMeasure bm = readBMEValues();
-  record_log new_record = { bm.temp, bm.humidity, bm.pressure, bm.pressure_2 };
+  sensorMeasure sensor;
+  sensor = readBMEValues();
+
+  if ((sensor.humidity > 100) || (sensor.humidity < 0)) {
+    delay(500);
+    sensor = readBMEValues();
+    Serial.print("Incorrect '" + String(sensor.name) + "' sensor measured values!!!");
+  }
+
+  record_log new_record = { sensor.temp, sensor.humidity, sensor.pressure, sensor.pressure_2 };
   day_log_buffer.push(new_record);
   Serial.println("Size of day_log buffer.. " + String(day_log_buffer.size()));
   timeClient.update();
-  last_measure_time = String(timeClient.getHours() + 1) + ":" + String(timeClient.getMinutes());
-  Serial.println("Last mesure time '" + last_measure_time + "'");
+  last_measured_time = timeClient.getFormattedTime();
+  Serial.println("Last measured time '" + last_measured_time + "'");
 }
 
 
@@ -214,7 +222,7 @@ void connectWiFi() {
 struct sensorMeasure readBMEValues() {
   sensorMeasure data;
 
-  data.name = (char *) "BME280";
+  data.name = "BME280";
   data.temp = bme.readTemperature();
   data.humidity = round(bme.readHumidity());
   float pressure_tmp = bme.readPressure();
@@ -244,7 +252,7 @@ struct sensorMeasure readDS18b20Values() {
   sensors.requestTemperatures(); // Send the command to get temperatures
   Serial.println(F("DONE"));
 
-  data.name = (char *) "DS18B20";
+  data.name = "DS18B20";
   data.temp = sensors.getTempCByIndex(0);
 
   // Check if any reads failed and exit early (to try again).
@@ -260,7 +268,7 @@ struct sensorMeasure readDHT22Values() {
   sensorMeasure data;
   delay(300);
   Serial.print(F("Requesting DHT22 temperatures... "));
-  data.name = (char *) "DHT22/AM2302";
+  data.name = "DHT22/AM2302";
   data.humidity = round(dht.readHumidity());
   data.temp = dht.readTemperature();
 
@@ -311,7 +319,7 @@ void routes() {
 
 void setHeader() {
   server.sendHeader("Access-Control-Allow-Origin", "*");
-  server.sendHeader("user-agent", "esp8266");
+  server.sendHeader("user-agent", "esp8266-client");
 }
 
 void handleSensors() {
@@ -354,10 +362,8 @@ void handleDay() {
   JsonObject &root = jsonBuffer.createObject();
 
   root["success"] = "OK";
-  root["uptime"] = millis();
   root["total_records"] = day_log_buffer.size();
-  root["vcc"] = (float)ESP.getVcc() / 1024.0f;
-  root["last_measure_time"] = last_measure_time;
+  root["last_measured_time"] = last_measured_time;
 
   JsonArray &records = root.createNestedArray("records");
 
@@ -366,8 +372,7 @@ void handleDay() {
     JsonObject &record = records.createNestedObject();
     record["t"] = round(day_log_buffer[i].temp * 10); // on a front-end side need to divide by temp/10
     record["h"] = day_log_buffer[i].hum;
-    //    record["p"] = day_log_buffer[i].pres;
-    record["p"] = round(day_log_buffer[i].pres_2 * 10);
+    record["p"] = round(day_log_buffer[i].pres_2);
     //    record["pres_2"] = day_log_buffer[i].pres_2;
     i++;
     //    records.add(record); //do not need it, it creates dubs
@@ -388,7 +393,9 @@ void handleInfo() {
 
   root["success"] = "OK";
   root["uptime"] = millis(); // get the current milliseconds from arduino
-  root["build_vesrion"] = build_version_str;
+  root["build_version"] = build_version;
+  root["vcc"] = (float)ESP.getVcc() / 1024.0f;
+
 
   JsonObject &network = root.createNestedObject("network");
   network["ssid"] = ssid;
@@ -423,6 +430,10 @@ void handleInfo() {
     esp["message"] = "Flash Chip configuration OK";
   }
 
+  esp["reset_reason"] = ESP.getResetReason();
+  esp["reset_info"] = ESP.getResetInfo();
+
+
   char buffer[1024];
   root.printTo(buffer, sizeof(buffer));
   //    root.prettyPrintTo(Serial);
@@ -435,7 +446,7 @@ void handleSettings() {
   JsonObject &root = jsonBuffer.createObject();
 
   root["success"] = "OK";
-  root["vcc"] = (float)ESP.getVcc() / 1024.0f;
+  root["vcc"] = (float)ESP.getVcc() / 1024.0f; // need to remove then
   root["more_settings"] = "in progress";
 
   char buffer[1024];

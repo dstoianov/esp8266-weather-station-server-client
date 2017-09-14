@@ -196,7 +196,7 @@ $(document).ready(function () {
                 // pres
                 config.data.datasets[2].data.push({
                     x: newTime,
-                    y: (data.records[index].p)
+                    y: data.records[index].p
                 });
                 newTime = addMinutes(newTime, updateInterval);
             }
