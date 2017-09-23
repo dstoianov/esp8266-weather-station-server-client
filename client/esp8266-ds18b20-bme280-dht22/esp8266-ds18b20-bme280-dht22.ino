@@ -4,7 +4,6 @@
 // Include the libraries we need
 #include <OneWire.h>
 #include <Arduino.h>
-//#include "adc.h"
 #include <DallasTemperature.h>
 #include <Wire.h>
 #include <SPI.h>
@@ -60,12 +59,13 @@ WiFiUDP ntpUDP;
 NTPClient timeClient(ntpUDP, "europe.pool.ntp.org", time_zone * 60 * 60);
 
 String last_measured_time;
+const char* host = "esp8266-station";
 
-//const char *ssid = "FRITZ";
-//const char *password = "32570220417897809444";
+const char *ssid = "FRITZ";
+const char *password = "32570220417897809444";
 
-const char* ssid = "kiwi Guest";
-const char* password = "Opening Doors";
+//const char* ssid = "kiwi Guest";
+//const char* password = "Opening Doors";
 
 struct sensorMeasure {
   String name;
@@ -95,6 +95,8 @@ unsigned long last_time = 0;
 const int update_interval_min = 15; // collect data every 15 minutes
 
 void setup(void) {
+
+  Serial.println(F("Booting Sketch..."));
 
   // Set WiFi to station mode and disconnect from an AP if it was previously connected
   WiFi.softAPdisconnect();
@@ -161,6 +163,18 @@ void setup(void) {
   Serial.println("HTTP server started");
 
   timeClient.begin();
+
+  if (MDNS.begin(host)) {
+    Serial.println("\nMDNS responder started. ");
+    Serial.print("You can now connect to http://");
+    Serial.print(host);
+    Serial.println(".local");
+  }
+
+  MDNS.addService("http", "tcp", 80);
+  Serial.printf("Ready! Open http://%s.local in your browser\n", host);
+
+
 }
 
 
@@ -309,6 +323,8 @@ void routes() {
   server.on("/info", handleInfo);
   server.on("/settings", handleSettings); //in develop
   //    server.onNotFound(handleNotFound);
+  server.onFileUpload(webFileUpload);
+  server.on("/update_sketch", handleUpdateSketch);
 
   server.onNotFound([]() {
     if (!handleFileRead(server.uri()))
@@ -319,7 +335,8 @@ void routes() {
 
 void setHeader() {
   server.sendHeader("Access-Control-Allow-Origin", "*");
-  server.sendHeader("user-agent", "esp8266-client");
+  server.sendHeader("User-Agent", "ESP8266");
+  server.sendHeader("Time", timeClient.getFormattedTime());
 }
 
 void handleSensors() {
@@ -456,6 +473,28 @@ void handleSettings() {
   server.send(200, CONTENT_TYPE_JSON, buffer);
 }
 
+void handleUpdateSketch() {
+  StaticJsonBuffer<256> jsonBuffer;
+  JsonObject &root = jsonBuffer.createObject();
+
+  if (Update.hasError()) {
+    root["update"] = "FAIL";
+  } else {
+    root["update"] = "OK";
+  }
+  root["build_version_current"] = build_version;
+
+  char buffer[256];
+  root.printTo(buffer, sizeof(buffer));
+  setHeader();
+  server.sendHeader("Connection", "close");
+  server.send(200, CONTENT_TYPE_JSON, buffer);
+
+  delay(3000);
+
+  ESP.restart();
+}
+
 void handleRoot() {
   if (!handleFileRead("/"))
     handleNotFound();
@@ -484,6 +523,44 @@ void sendError() {
   setHeader();
   server.send(404, CONTENT_TYPE_JSON, "{\"success\":\"false\"}");
 }
+
+
+
+void webFileUpload(void) {
+
+  String url = "/update_sketch";
+  if (server.uri() != url) {
+    Serial.println("Incorrect URL for upload, expected " + url);
+    return;
+  }
+
+  HTTPUpload& upload = server.upload();
+  if (upload.status == UPLOAD_FILE_START) {
+    Serial.setDebugOutput(true);
+    WiFiUDP::stopAll();
+    Serial.printf("Update: %s\n", upload.filename.c_str());
+    uint32_t maxSketchSpace = (ESP.getFreeSketchSpace() - 0x1000) & 0xFFFFF000;
+    if (!Update.begin(maxSketchSpace)) { //start with max available size
+      Update.printError(Serial);
+    }
+  } else if (upload.status == UPLOAD_FILE_WRITE) {
+    Serial.print(".");
+    if (Update.write(upload.buf, upload.currentSize) != upload.currentSize) {
+      Update.printError(Serial);
+    }
+  } else if (upload.status == UPLOAD_FILE_END) {
+    if (Update.end(true)) { //true to set the size to the current progress
+      Serial.printf("Update Success: %u\nRebooting...\n", upload.totalSize);
+    } else {
+      Update.printError(Serial);
+    }
+    Serial.setDebugOutput(false);
+  }
+  yield();
+
+}
+
+
 
 
 //format bytes

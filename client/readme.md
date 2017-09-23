@@ -44,9 +44,10 @@ https://github.com/esp8266/arduino-esp8266fs-plugin
 
 ##### WiFi Socket 
 1. Spec
-    - ESP8266 NodeMCU
-    - PZEM-004T
-    - Relay PIC AVR DSP ARM
+    - ESP8266 NodeMCU ~ 3€
+    - PZEM-004T ~3€
+    - Relay PIC AVR DSP ARM ~8€
+    - Plastic Case/Box ~7-10€
 1. Data
     - Input：120V～,10A,60Hz or  220V~,10A,50/60Hz
     - Max Output：120V～,15A  or 220V~,10A
@@ -56,9 +57,49 @@ https://github.com/esp8266/arduino-esp8266fs-plugin
     - monitoring current Watt/Power/Volt/Amp consumption
     - track energy spending via socket
     - powered by the same socket
-    - no need any phone apps
+    - no phone app needed
     - report for last 24h 
-    - track socket temperature + humidity (optional)
+    - track temperature + humidity (optional)
+
+
+##### Weather Station (indoor) 
+1. Spec
+    - ESP8266 NodeMCU ~ 3€
+    - MH-Z14A ~ 17.82€ (CO2 Sensor)
+    - HTU21D ~1.54€ (Hum/Temp)
+    - BME280 ~2.71€ (Hum/Temp/Pressure)
+    - BMP180 ~2.56€ (Temp/Pressure)
+    - BH1750FVI ~1€ (Light Intensity Sensor)
+    - KY-037 ~0.60€ (sound)
+    - OLED Display 128X64 I2C SSD1306 12864 ~2.50€ (optional)
+    - VEML6070 ~2.38€, (UV sensor, optional)
+    - DS18B20 ~0.5€ (Temp sensor, optional)
+    - HC-SR501 ~1€ (PIR sensor, optional)
+1. SENSORS AND MEASUREMENTS
+    - Temperature
+    - Humidity
+    - Barometer (optional)
+    - CO2 meter
+    - Sound meter
+    - Light meter
+    - UV level meter
+    
+    
+### Wi-Fi Weather station (outdoor)
+1. Spec
+    - Wi-Fi board - ESP8266 NodeMCU ~ 3€
+    - temp/humidity/pressure
+        - BME280 ~2.71€ (Hum/Temp/Pressure)
+        - one or two sensors
+        - HTU21D ~1.54€ (Temp/Humidity)
+        - BMP180 ~2.56€ (Temp/Pressure)
+    - BH1750FVI ~1€ (Light Intensity Sensor)
+    - VEML6070 ~2.38€, (UV sensor, optional)
+    - KY-037 ~0.60€ (sound sensor)
+    - DS18B20 ~0.5€ (Temp sensor, optional)
+    - HC-SR501 ~1€ (PIR sensor, optional)
+    - OLED Display 128X64 I2C SSD1306 12864 ~2.50€ (optional)
+
 
 
 

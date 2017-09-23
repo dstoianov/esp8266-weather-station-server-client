@@ -78,6 +78,7 @@
 
             </div>
         </nav>
+
         <div id="content">
 
             <div id="sensors" class="item" role="tabpanel">
@@ -295,7 +296,6 @@
 
             <!--SETTINGS-->
 
-
             <div id="settings" class="item" style="display: none;">
                 <br>
                 <h3>
@@ -305,39 +305,42 @@
                 <br>
                 <br>
 
+
+                <!--ESP Configuration-->
+
                 <div class="col-sm-6">
                     <div class="card">
 
                         <div class="card-header">
                             <label class="h4">ESP Configuration</label>
                         </div>
+
                         <div class="card-block">
+                            <br>
                             <div class="container">
-                                <br>
-                                <form class="form-inline">
-                                    <div class="form-group">
-                                        <label for="inputPassword2" class="col-3 col-form-label">Update Period</label>
-
+                                <form>
+                                    <div class="form-group row">
+                                        <label for="update-period" class="col-4 col-form-label">Update Period</label>
+                                        <div class="col-6">
+                                            <input type="number" min="5" max="60" step="1" class="form-control"
+                                                   id="update-period" value="15"
+                                                   placeholder="min">
+                                        </div>
                                     </div>
-                                    <div class="form-group">
-                                        <!--<label for="inputPassword2" class="sr-only">hohoh</label>-->
-                                        <input type="number" class="form-control" id="inputPassword2" value="15"
-                                               placeholder="min">
+                                    <div class="form-group row">
+                                        <div class="offset-sm-2 col-sm-10">
+                                            <button type="submit" class="btn btn-primary ">Submit</button>
+                                        </div>
                                     </div>
-                                    <button type="submit" class="btn btn-primary">Save</button>
-
                                 </form>
-                                <br>
                             </div>
                         </div>
-
-
                     </div>
                 </div>
-
                 <br>
                 <br>
 
+                <!--NTP Configuration-->
 
                 <div class="col-sm-6">
                     <div class="card">
@@ -352,14 +355,14 @@
                                 <form>
                                     <div class="form-group row">
                                         <label for="inputEmail3" class="col-3 col-form-label">Server NTP</label>
-                                        <div class="col-5">
+                                        <div class="col-6">
                                             <input type="text" class="form-control" id="inputEmail3"
                                                    value="europe.pool.ntp.org" placeholder="europe.pool.ntp.org">
                                         </div>
                                     </div>
                                     <div class="form-group row">
                                         <label for="inputPassword3" class="col-3 col-form-label">Time Zone</label>
-                                        <div class="col-5">
+                                        <div class="col-6">
                                             <input type="text" class="form-control" id="inputPassword3" value="+3"
                                                    placeholder="+3">
                                         </div>
@@ -373,14 +376,59 @@
                             </div>
                         </div>
                     </div>
-
-
                 </div>
+                <br>
+                <br>
+
+
+                <!--Update firmware-->
+
+                <div class="col-sm-6">
+                    <div class="card">
+
+                        <div class="card-header">
+                            <label class="h4">Update Firmware</label>
+                        </div>
+
+                        <div class="card-block">
+                            <br>
+                            <div class="container">
+                                <form action='/update_sketch' method='post' enctype='multipart/form-data'>
+                                    <div class="form-group row">
+                                        <div class="col-6">
+                                            <input type="file" id="file" class="form-control-file btn btn-primary"
+                                                   name="upload">
+                                            <small>Select file in format *.bin</small>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="offset-sm-2 col-sm-10">
+                                            <button type="submit" class="btn btn-primary ">Update</button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <br>
+
+
             </div>
 
+
+            <!--info message after update firmware-->
+
+            <div id="fw-update" class="item" style="display: none;">
+                <br>
+                <h3>ESP8266 Update Firmware </h3>
+                <h4>Status</h4>
+
+            </div>
+
+
         </div>
-
-
     </div>
 </div>
 
