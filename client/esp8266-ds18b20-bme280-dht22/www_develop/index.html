@@ -18,6 +18,10 @@
             integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
             crossorigin="anonymous"></script>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.form/4.2.2/jquery.form.min.js"
+            integrity="sha384-FzT3vTVGXqf7wRfy8k4BiyzvbNfeYjK+frTVqZeNDFl8woCbF0CYG6g2fMEFFo/i"
+            crossorigin="anonymous"></script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"
             integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4"
             crossorigin="anonymous"></script>
@@ -329,7 +333,7 @@
                                     </div>
                                     <div class="form-group row">
                                         <div class="offset-sm-2 col-sm-10">
-                                            <button type="submit" class="btn btn-primary ">Submit</button>
+                                            <button type="submit" class="btn btn-primary">Save</button>
                                         </div>
                                     </div>
                                 </form>
@@ -354,22 +358,22 @@
                             <div class="container">
                                 <form>
                                     <div class="form-group row">
-                                        <label for="inputEmail3" class="col-3 col-form-label">Server NTP</label>
+                                        <label for="ntp-url" class="col-3 col-form-label">Server NTP</label>
                                         <div class="col-6">
-                                            <input type="text" class="form-control" id="inputEmail3"
+                                            <input type="text" class="form-control" id="ntp-url"
                                                    value="europe.pool.ntp.org" placeholder="europe.pool.ntp.org">
                                         </div>
                                     </div>
                                     <div class="form-group row">
-                                        <label for="inputPassword3" class="col-3 col-form-label">Time Zone</label>
+                                        <label for="time-zone" class="col-3 col-form-label">Time Zone</label>
                                         <div class="col-6">
-                                            <input type="text" class="form-control" id="inputPassword3" value="+3"
-                                                   placeholder="+3">
+                                            <input type="text" class="form-control" id="time-zone" value="+2"
+                                                   placeholder="+2">
                                         </div>
                                     </div>
                                     <div class="form-group row">
                                         <div class="offset-sm-2 col-sm-10">
-                                            <button type="submit" class="btn btn-primary ">Submit</button>
+                                            <button type="submit" class="btn btn-primary ">Save</button>
                                         </div>
                                     </div>
                                 </form>
@@ -393,7 +397,7 @@
                         <div class="card-block">
                             <br>
                             <div class="container">
-                                <form action='/update_sketch' method='post' enctype='multipart/form-data'>
+                                <form id="update" action='/update_sketch' method='post' enctype='multipart/form-data'>
                                     <div class="form-group row">
                                         <div class="col-6">
                                             <input type="file" id="file" class="form-control-file btn btn-primary"
@@ -420,10 +424,19 @@
 
             <!--info message after update firmware-->
 
-            <div id="fw-update" class="item" style="display: none;">
+            <div id="update-page" class="item" style="display: none;">
                 <br>
-                <h3>ESP8266 Update Firmware </h3>
-                <h4>Status</h4>
+                <h3>Update Firmware</h3>
+
+                <div class="alert alert-success" role="alert">
+                    <h4 class="alert-heading">Success!</h4>
+                    <p>ESP will be rebooted soon! It takes about 15 sec.</p>
+                </div>
+
+                <div class="alert alert-danger" role="alert">
+                    <h4 class="alert-heading">Fail!</h4>
+                    <p>Please, reboot the ESP and try again.</p>
+                </div>
 
             </div>
 

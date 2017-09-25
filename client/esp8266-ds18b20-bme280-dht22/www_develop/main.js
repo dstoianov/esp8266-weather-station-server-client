@@ -5,8 +5,8 @@ $(document).ready(function () {
     window.host = loc.host !== '' ? (window.host + loc.host) : '';
 
     if (window.host === '')
-       window.host = "http://192.168.178.21/";
-//     window.host = "http://192.168.150.174/";
+//       window.host = "http://192.168.178.21/";
+     window.host = "http://192.168.150.174/";
     else
         window.host += '/';
 
@@ -213,6 +213,23 @@ $(document).ready(function () {
 
         NProgress.done();
     }
+
+
+    $("#update").ajaxForm(function(data) {
+
+//          console.log("Data: " + JSON.stringify(data));
+
+          $("#settings").hide(1000);
+          if (data.update.toUpperCase() === "OK") {
+            $(".alert-danger").hide();
+            $(".alert-success").show();
+          } else {
+            $(".alert-success").hide();
+            $(".alert-danger").show();
+          }
+          $("#update-page").fadeIn('slow');
+    });
+
 
     var update = {
         '#sensors': updatesensors,

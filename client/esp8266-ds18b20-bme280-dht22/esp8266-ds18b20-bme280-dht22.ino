@@ -1,6 +1,5 @@
 
 
-
 // Include the libraries we need
 #include <OneWire.h>
 #include <Arduino.h>
@@ -14,7 +13,7 @@
 #include <ESP8266WebServer.h>
 #include <ESP8266mDNS.h>
 #include <ArduinoJson.h>
-#include <math.h>
+//#include <math.h>
 #include <FS.h>
 #include <DHT.h>
 #include <NTPClient.h>
@@ -28,7 +27,7 @@
 #define SEALEVELPRESSURE_HPA (1016)
 
 // Data wire is plugged into port 2 on the Arduino
-#define ONE_WIRE_BUS 14  //D5
+#define ONE_WIRE_PIN 14  //D5
 
 #define CONTENT_TYPE_TEXT_PLAIN "text/plain"
 #define CONTENT_TYPE_TEXT_HTML "text/html"
@@ -39,7 +38,7 @@ const char *build_version = "1.0, " __DATE__ ", " __TIME__;
 
 
 // Setup a oneWire instance to communicate with any OneWire devices (not just Maxim/Dallas temperature ICs)
-OneWire oneWire(ONE_WIRE_BUS);
+OneWire oneWire(ONE_WIRE_PIN);
 
 // Pass our oneWire reference to Dallas Temperature.
 DallasTemperature sensors(&oneWire);
@@ -56,16 +55,16 @@ ADC_MODE(ADC_VCC);
 
 const int time_zone = 2;
 WiFiUDP ntpUDP;
-NTPClient timeClient(ntpUDP, "europe.pool.ntp.org", time_zone * 60 * 60);
+NTPClient timeClient(ntpUDP, "pool.ntp.org", time_zone * 60 * 60);
 
 String last_measured_time;
 const char* host = "esp8266-station";
 
-const char *ssid = "FRITZ";
-const char *password = "32570220417897809444";
+//const char *ssid = "FRITZ";
+//const char *password = "32570220417897809444";
 
-//const char* ssid = "kiwi Guest";
-//const char* password = "Opening Doors";
+const char* ssid = "kiwi Guest";
+const char* password = "Opening Doors";
 
 struct sensorMeasure {
   String name;
@@ -92,7 +91,7 @@ const int led = 13;
 
 unsigned long last_time = 0;
 
-const int update_interval_min = 15; // collect data every 15 minutes
+unsigned int update_period_min = 15; // collect data every 15 minutes
 
 void setup(void) {
 
@@ -185,7 +184,7 @@ void loop() {
     do_measure();
   }
 
-  if (millis() - last_time > update_interval_min * 60 * 1000) {
+  if (millis() - last_time > update_period_min * 60 * 1000) {
     do_measure();
     last_time = millis();
   }
@@ -300,20 +299,7 @@ struct sensorMeasure readDHT22Values() {
   return data;
 }
 
-//void printVccValues() {
-//  float vcc = ESP.getVcc();
-//  Serial.println();
-//  Serial.print("Voltage: ");
-//  Serial.print(vcc / 1000);
-//  Serial.println(" V");
-//}
 
-//float round_up(float f) {
-//  float result;
-//  result = ceilf(f * 100) / 100;
-//  Serial.println("Round " + String(f, 4) + "->" + String(result, 4));
-//  return result;
-//}
 //===============HTTP Server================================
 
 void routes() {
@@ -482,7 +468,7 @@ void handleUpdateSketch() {
   } else {
     root["update"] = "OK";
   }
-  root["build_version_current"] = build_version;
+  root["current_build_version"] = build_version;
 
   char buffer[256];
   root.printTo(buffer, sizeof(buffer));
@@ -559,8 +545,6 @@ void webFileUpload(void) {
   yield();
 
 }
-
-
 
 
 //format bytes
