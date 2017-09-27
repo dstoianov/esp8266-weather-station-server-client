@@ -209,7 +209,13 @@ $(document).ready(function () {
     function updatesettings() {
         NProgress.start();
 
-        console.log("call update settings template");
+//        console.log("call update settings template");
+        $.get(host + "settings", function (data, status) {
+
+            $('#current-date').text(data.date_time);
+            $('#current-version').text(data.build_version);
+
+        });
 
         NProgress.done();
     }

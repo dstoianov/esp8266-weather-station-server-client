@@ -322,7 +322,7 @@ void routes() {
 void setHeader() {
   server.sendHeader("Access-Control-Allow-Origin", "*");
   server.sendHeader("User-Agent", "ESP8266");
-  server.sendHeader("Time", timeClient.getFormattedTime());
+  server.sendHeader("Date-Time", timeClient.getFullFormattedTime());
 }
 
 void handleSensors() {
@@ -450,8 +450,11 @@ void handleSettings() {
 
   root["success"] = "OK";
   root["vcc"] = (float)ESP.getVcc() / 1024.0f; // need to remove then
+  root["build_version"] = build_version;
+  root["date_time"] = timeClient.getFullFormattedTime();
   root["more_settings"] = "in progress";
 
+  
   char buffer[1024];
   root.printTo(buffer, sizeof(buffer));
   //  root.prettyPrintTo(Serial);
